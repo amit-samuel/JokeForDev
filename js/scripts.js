@@ -15,10 +15,10 @@ var pokemonRepository = (function () {
     }
 
     function loadList() {
-        return fetch(apiUrl).then(function (response) {
-            return response.json();
-        }).then(function (json) {
-            json.results.forEach(function (item) {
+        return $.ajax(apiUrl, {
+            dataType: 'json'
+        }).then(function (item) {
+            $.each(item.results, function(index, item) {
                 var pokemon = {
                     name: item.name,
                     detailsUrl: item.url
@@ -27,20 +27,19 @@ var pokemonRepository = (function () {
             })
         }).catch(function (e) {
             console.error(e);
-        })
+        });
     }
 
     function loadDetails(item) {
         var url = item.detailsUrl;
-        return fetch(url).then(function (response) {
-            return response.json();
+        return $.ajax(url, {
+            dataType: 'json'
         }).then(function (details) {
             // Now we add the details to the item
             item.imageUrl = details.sprites.front_default;
             item.height = details.height;
             item.types = details.types;
             return item;
-
         }).catch(function (e) {
             console.error(e);
         });
@@ -53,26 +52,21 @@ var pokemonRepository = (function () {
     }
 
     function showModal(pokemon) {
-        var tmp = loadDetails(pokemon);
-        var modalContainer = $('#modal-container');
-
-        // Clear all existing modal content
-        modalContainer.innerHTML = ''; //
-        var modal = $('<div class="modal"/>');
+        var modalContainer = $('#modal-container').text('');
+        var modal = $('<div class="modal"></div>');
         // Add the new modal content
-        var closeButtonElement = $('<button class="modal-close"/>').text('Close');
+        var closeButtonElement = $('<button class="modal-close"></button>').text('Close');
         closeButtonElement.addEventListener('click', hideModal);
-        var titleElement = $('<h1/>').text(pokemon.name);
-        var contentElement = $('<p/>').text(pokemon.height);
-        var imgElement = $('<img/>');
-        imgElement.imageUrl = pokemon.imageUrl;
-        modal.appendChild(closeButtonElement);
-        modal.appendChild(titleElement);
-        modal.appendChild(contentElement);
-        modal.appendChild(imgElement);
-        modalContainer.appendChild(modal);
+        var titleElement = $('<h1></h1>').text(pokemon.name);
+        var contentElement = $('<p></p>').text(pokemon.height);
+        var imgElement = $('<img>').imageURL(pokemon.imageUrl);
+        modal.append(closeButtonElement);
+        modal.append(titleElement);
+        modal.append(contentElement);
+        modal.append(imgElement);
+        modalContainer.append(modal);
         modalContainer.classList.add('is-visible');
-        $('.modalContainer').click((function (e) {
+        modalContainer.click((function (e) {
             var target = e.target;
             console.log(e.target)
             if (target === modalContainer) {
@@ -81,30 +75,29 @@ var pokemonRepository = (function () {
         }))
     }
 
+    //muss noch bearbeiten
     function addListItem(pokemone) {
-        var container = $('.pokemon-list');
-        var listItem = $('<li/>');
+        var listItem = $('<li>/');
         var button = $('<button/>').text(pokemone.name);
-        container.appendChild(listItem);
-        listItem.appendChild(button);
-        $('.button').click((function (e) {
+        $('.pokemon-list').append(listItem);
+        $(listItem).append(button);
+        button.click((function (e) {
             showDetails(pokemone);
-        }))
+        }));
     }
 
 
 
     function hideModal() {
-        var modalContainer = $('#modal-container');
-        modalContainer.classList.remove('is-visible');
+    debugger;
+        $('#modal-container').classList.remove('is-visible');
 
     }
 
 
 
     window.addEventListener('keydown', (e) => {
-        var modalContainer = $('#modal-container');
-        if (e.key === 'Escape' && modalContainer.classList.contains('is-visible')) {
+        if (e.key === 'Escape' && $('#modal-container').classList.contains('is-visible')) {
             hideModal();
         }
     });
