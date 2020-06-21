@@ -54,9 +54,10 @@ var pokemonRepository = (function () {
     function showModal(pokemon) {
         var modalContainer = $('#modal-container').text('');
         var modal = $('<div class="modal"></div>');
+        $('body').append(modal);
         // Add the new modal content
         var closeButtonElement = $('<button class="modal-close"></button>').text('Close');
-        closeButtonElement.addEventListener('click', hideModal);
+        closeButtonElement.addEventListener('click', hideModal());
         var titleElement = $('<h1></h1>').text(pokemon.name);
         var contentElement = $('<p></p>').text(pokemon.height);
         var imgElement = $('<img>').imageURL(pokemon.imageUrl);
@@ -89,8 +90,7 @@ var pokemonRepository = (function () {
 
 
     function hideModal() {
-    debugger;
-        $('#modal-container').classList.remove('is-visible');
+        modal-container.classList.remove('is-visible');
 
     }
 
