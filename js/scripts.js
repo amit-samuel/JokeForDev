@@ -13,7 +13,6 @@ var pokemonRepository = (function () {
     function addDetails() {
         pokemontDetails.push(item);
     }
-
     function loadList() {
         return $.ajax(apiUrl, {
             dataType: 'json'
@@ -29,7 +28,6 @@ var pokemonRepository = (function () {
             console.error(e);
         });
     }
-
     function loadDetails(item) {
         var url = item.detailsUrl;
         return $.ajax(url, {
@@ -44,7 +42,6 @@ var pokemonRepository = (function () {
             console.error(e);
         });
     }
-
     function showDetails(item) {
         pokemonRepository.loadDetails(item).then(function () {
             showModal(item);
@@ -52,11 +49,13 @@ var pokemonRepository = (function () {
     }
 
     function showModal(pokemon) {
-        var modalContainer = $('#modal-container').text('');
-        var modal = $('<div class="modal"></div>');
+        var modalContainer = $('modal-container').text('');
+        var modal = $('<div></div>');
+        modal.addClass('modal');
         $('body').append(modal);
         // Add the new modal content
-        var closeButtonElement = $('<button class="modal-close"></button>').text('Close');
+        var closeButtonElement = $('<button></button>').text('Close');
+        closeButtonElement.addClass('modal-close');
         closeButtonElement.addEventListener('click', hideModal());
         var titleElement = $('<h1></h1>').text(pokemon.name);
         var contentElement = $('<p></p>').text(pokemon.height);
@@ -78,8 +77,8 @@ var pokemonRepository = (function () {
 
     //muss noch bearbeiten
     function addListItem(pokemone) {
-        var listItem = $('<li>/');
-        var button = $('<button/>').text(pokemone.name);
+        var listItem = $('<li></li>');
+        var button = $('<button></button>').text(pokemone.name);
         $('.pokemon-list').append(listItem);
         $(listItem).append(button);
         button.click((function (e) {
@@ -90,7 +89,8 @@ var pokemonRepository = (function () {
 
 
     function hideModal() {
-        modal-container.classList.remove('is-visible');
+        var modalContainer = $('modal-container');
+        modalContainer.classList.remove('is-visible');
 
     }
 
